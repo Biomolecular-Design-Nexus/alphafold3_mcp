@@ -1,0 +1,38 @@
+{
+  "_description": "Configuration for protein prediction with pre-computed MSA",
+  "_source": "Extracted from examples/use_case_3_precomputed_msa.py",
+
+  "model": {
+    "seeds": [1],
+    "dialect": "alphafold3",
+    "version": 1
+  },
+
+  "naming": {
+    "default_name": "protein_msa_prediction",
+    "name_format": "{protein_name}_{mode}_prediction"
+  },
+
+  "msa": {
+    "supported_modes": ["a3m", "msa"],
+    "mode_descriptions": {
+      "a3m": "Use pre-computed A3M MSA + optional template search",
+      "msa": "Use pre-computed MSA/templates (inference only, fastest)"
+    },
+    "default_mode": "a3m",
+    "path_calculation": "relative_preferred"
+  },
+
+  "output": {
+    "format": "json",
+    "include_metadata": true,
+    "include_msa_stats": true
+  },
+
+  "validation": {
+    "check_sequence": true,
+    "check_msa_file": true,
+    "check_msa_format": true,
+    "valid_amino_acids": "ACDEFGHIKLMNPQRSTVWY"
+  }
+}

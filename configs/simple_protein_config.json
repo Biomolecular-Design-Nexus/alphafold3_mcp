@@ -1,0 +1,25 @@
+{
+  "_description": "Configuration for simple protein structure prediction",
+  "_source": "Extracted from examples/use_case_1_simple_protein.py",
+
+  "model": {
+    "seeds": [1],
+    "dialect": "alphafold3",
+    "version": 1
+  },
+
+  "naming": {
+    "default_name": "protein_prediction",
+    "name_format": "{protein_name}_prediction"
+  },
+
+  "output": {
+    "format": "json",
+    "include_metadata": true
+  },
+
+  "validation": {
+    "check_sequence": true,
+    "valid_amino_acids": "ACDEFGHIKLMNPQRSTVWY"
+  }
+}

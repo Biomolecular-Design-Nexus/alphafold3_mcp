@@ -1,0 +1,36 @@
+{
+  "_description": "Configuration for protein-ligand complex prediction",
+  "_source": "Extracted from examples/use_case_2_protein_ligand.py",
+
+  "model": {
+    "seeds": [1],
+    "dialect": "alphafold3",
+    "version": 1
+  },
+
+  "naming": {
+    "default_name": "protein_ligand_complex",
+    "name_format": "{protein_name}_{ligand_type}_complex"
+  },
+
+  "chains": {
+    "protein": ["A"],
+    "ligand": ["B"]
+  },
+
+  "ligand": {
+    "supported_types": ["smiles", "ccd_id"],
+    "smiles_validation_chars": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()[]@+=\\/#-"
+  },
+
+  "output": {
+    "format": "json",
+    "include_metadata": true
+  },
+
+  "validation": {
+    "check_sequence": true,
+    "check_ligand": true,
+    "valid_amino_acids": "ACDEFGHIKLMNPQRSTVWY"
+  }
+}

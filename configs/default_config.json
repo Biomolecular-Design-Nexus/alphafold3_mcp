@@ -1,0 +1,40 @@
+{
+  "_description": "Default configuration for all MCP scripts",
+  "_version": "1.0",
+
+  "model": {
+    "seeds": [1],
+    "dialect": "alphafold3",
+    "version": 1
+  },
+
+  "naming": {
+    "default_prefix": "alphafold3",
+    "timestamp_format": "%Y%m%d_%H%M%S"
+  },
+
+  "paths": {
+    "model_dir": "repo/alphafold3/model",
+    "db_dir": "repo/alphafold3/alphafold3_db",
+    "output_dir": "output",
+    "temp_dir": "temp"
+  },
+
+  "output": {
+    "format": "json",
+    "indent": 2,
+    "include_metadata": true
+  },
+
+  "validation": {
+    "check_sequence": true,
+    "valid_amino_acids": "ACDEFGHIKLMNPQRSTVWY",
+    "min_sequence_length": 1,
+    "max_sequence_length": 10000
+  },
+
+  "logging": {
+    "level": "INFO",
+    "include_timestamp": true
+  }
+}

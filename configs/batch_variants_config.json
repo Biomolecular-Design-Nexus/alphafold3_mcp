@@ -1,0 +1,42 @@
+{
+  "_description": "Configuration for batch protein variant prediction",
+  "_source": "Extracted from examples/use_case_4_batch_variants.py",
+
+  "model": {
+    "seeds": [1],
+    "dialect": "alphafold3",
+    "version": 1
+  },
+
+  "naming": {
+    "variant_dir_prefix": "seq",
+    "variant_name_format": "{template_name}_var_{index}_{mutations}"
+  },
+
+  "variants": {
+    "max_variants": null,
+    "supported_input_types": ["fasta", "mutations"],
+    "mutation_format": "A123V",
+    "mutation_separator": " "
+  },
+
+  "output": {
+    "format": "json",
+    "include_metadata": true,
+    "batch_structure": "subdirectories",
+    "config_filename": "input.json"
+  },
+
+  "validation": {
+    "check_sequence": true,
+    "check_mutations": true,
+    "warn_position_mismatch": true,
+    "valid_amino_acids": "ACDEFGHIKLMNPQRSTVWY"
+  },
+
+  "error_handling": {
+    "position_mismatch": "warn",
+    "invalid_mutation_format": "warn",
+    "out_of_range_position": "warn"
+  }
+}

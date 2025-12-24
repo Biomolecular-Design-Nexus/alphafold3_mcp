@@ -17,3 +17,7 @@ templates/
 tests/
 .gemini/
 repo/
+jobs/
+output/
+test_output/
+examples/
