@@ -61,7 +61,8 @@ COPY src/ ./src/
 RUN chmod -R a+r /app/src/
 COPY configs/ ./configs/
 RUN chmod -R a+r /app/configs/
-RUN mkdir -p tmp/inputs tmp/outputs output
+RUN mkdir -p tmp/inputs tmp/outputs output jobs results && \
+    chmod 777 /app /app/tmp /app/tmp/inputs /app/tmp/outputs /app/output /app/jobs /app/results
 
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
@@ -69,4 +70,6 @@ ENV XLA_FLAGS="--xla_gpu_enable_triton_gemm=false"
 ENV XLA_PYTHON_CLIENT_PREALLOCATE=true
 ENV XLA_CLIENT_MEM_FRACTION=0.95
 
+ENV NVIDIA_CUDA_END_OF_LIFE=0
+ENTRYPOINT []
 CMD ["python", "src/server.py"]
