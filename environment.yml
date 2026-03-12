@@ -1,4 +1,4 @@
-name: alphafold3-env
+name: af3-env
 channels:
   - bioconda
   - defaults

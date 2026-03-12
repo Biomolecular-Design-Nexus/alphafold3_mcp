@@ -77,6 +77,10 @@ def _run_command(
     run_env["CUDA_VISIBLE_DEVICES"] = str(device)
     run_env["XLA_FLAGS"] = "--xla_gpu_enable_triton_gemm=false"
     run_env["PYTHONUNBUFFERED"] = "1"
+    # Add AF3 src to PYTHONPATH so 'alphafold3' package is importable
+    af3_src = str(_get_af3_path() / "src")
+    existing = run_env.get("PYTHONPATH", "")
+    run_env["PYTHONPATH"] = f"{af3_src}:{existing}" if existing else af3_src
 
     # Get output directory from command args
     output_dir = ""

@@ -3,7 +3,7 @@ FROM nvidia/cuda:12.6.0-base-ubuntu22.04 AS builder
 RUN apt-get update --quiet \
     && apt-get install --yes --quiet software-properties-common \
     && apt-get install --yes --quiet git wget gcc g++ cmake ninja-build make \
-       patch flex bison curl
+       patch flex bison curl zlib1g-dev libboost-all-dev
 
 # Install Python 3.11
 RUN add-apt-repository ppa:deadsnakes/ppa \
@@ -53,9 +53,23 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir --ignore-installed fastmcp loguru
 
-# Install AlphaFold3 and build data
-RUN cd repo/alphafold3 && pip install --no-deps --no-cache-dir . && \
-    build_data
+# Install build tools for C++ extensions, then install AlphaFold3 and build data
+RUN pip install --no-cache-dir scikit-build-core pybind11 cmake ninja numpy && \
+    cd repo/alphafold3 && pip install --no-cache-dir . && \
+    build_data && \
+    cp /venv/lib/python3.11/site-packages/alphafold3/cpp.cpython-311-x86_64-linux-gnu.so \
+       /app/repo/alphafold3/src/alphafold3/ && \
+    cp /venv/lib/python3.11/site-packages/alphafold3/constants/converters/*.pickle \
+       /app/repo/alphafold3/src/alphafold3/constants/converters/
+
+# Fix: Copy OUTPUT_TERMS_OF_USE.md to source package dir (run_alphafold.py resolves it via cpp.__file__)
+RUN cp /app/repo/alphafold3/OUTPUT_TERMS_OF_USE.md \
+       /app/repo/alphafold3/src/alphafold3/OUTPUT_TERMS_OF_USE.md
+
+# Fix: Replace ETKDGv3 with srETKDGv3 for macrocyclic peptide conformer generation
+# ETKDGv3 hangs indefinitely on large macrocycles; srETKDGv3 handles them correctly
+COPY patches/fix_srETKDGv3.py /tmp/fix_srETKDGv3.py
+RUN python /tmp/fix_srETKDGv3.py && rm /tmp/fix_srETKDGv3.py
 
 # ---------- Runtime ----------
 FROM nvidia/cuda:12.6.0-base-ubuntu22.04 AS runtime
@@ -64,7 +78,7 @@ RUN apt-get update --quiet \
     && apt-get install --yes --quiet software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa \
     && DEBIAN_FRONTEND=noninteractive apt-get install --yes --quiet \
-       python3.11 python3.11-venv libgomp1 \
+       python3.11 python3.11-venv libgomp1 zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy venv, hmmer, maxit, and app from builder
